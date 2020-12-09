@@ -1,33 +1,57 @@
 import 'package:flutter/material.dart';
 import 'package:shop/models/product.dart';
+import 'package:shop/views/product_detail_screen.dart';
+import '../utils/app_routes.dart';
 
 class ProductItem extends StatelessWidget {
   final Product product;
+
   const ProductItem(this.product);
 
   @override
   Widget build(BuildContext context) {
-    return GridTile(
-      child: Image.network(
-        product.imageUrl,
-        fit: BoxFit.cover,
-      ),
-      footer: GridTileBar(
-        backgroundColor: Colors.black87,
-        leading: IconButton(
-          icon: Icon(Icons.favorite),
-          onPressed: () {},
+    return ClipRRect(
+      borderRadius: BorderRadius.circular(10),
+      child: GridTile(
+        child: GestureDetector(
+          onTap: () {
+            Navigator.of(context).pushNamed(
+              AppRoutes.PRODUCT_DETAIL,
+              arguments: product,
+            );
+
+           /* 
+            Navigator.of(context).push(
+              MaterialPageRoute(
+                builder: (ctx) => ProductDetailScreen(product),
+              ),
+            );
+             */
+          },
+          child: Image.network(
+            product.imageUrl,
+            fit: BoxFit.cover,
+          ),
         ),
-        title: Text(
-          product.title,
-          textAlign: TextAlign.center,
-        ),
-        trailing: IconButton(
-          icon: IconButton(
-            icon: Icon(Icons.shopping_cart),
+        footer: GridTileBar(
+          backgroundColor: Colors.black87,
+          leading: IconButton(
+            icon: Icon(Icons.favorite),
+            color: Theme.of(context).accentColor,
             onPressed: () {},
           ),
-          onPressed: () {},
+          title: Text(
+            product.title,
+            textAlign: TextAlign.center,
+          ),
+          trailing: IconButton(
+            icon: IconButton(
+              icon: Icon(Icons.shopping_cart),
+              color: Theme.of(context).accentColor,
+              onPressed: () {},
+            ),
+            onPressed: () {},
+          ),
         ),
       ),
     );
