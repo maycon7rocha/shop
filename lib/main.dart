@@ -9,6 +9,7 @@ import 'package:provider/provider.dart';
 
 import 'package:shop/providers/products.dart';
 import 'package:shop/providers/cart.dart';
+import 'package:shop/providers/orders.dart';
 
 void main() => runApp(MyApp());
 
@@ -18,10 +19,13 @@ class MyApp extends StatelessWidget {
     return MultiProvider(
       providers: [
         ChangeNotifierProvider(
-          create: (_) => Products(),
+          create: (_) => new Products(),
         ),
         ChangeNotifierProvider(
           create: (_) => Cart(),
+        ),
+        ChangeNotifierProvider(
+          create: (_) => Orders(),
         ),
       ],
       child: MaterialApp(
