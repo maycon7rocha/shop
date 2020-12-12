@@ -9,9 +9,10 @@ class AppDrawer extends StatelessWidget {
         children: <Widget>[
           AppBar(
             title: Text('Bem vindo Usuário!'),
+            automaticallyImplyLeading: false,
           ),
-          Divider();
-          ListTile()(
+          Divider(),
+          ListTile(
             leading: Icon(Icons.shop),
             title: Text('Loja'),
             onTap: () {
@@ -20,13 +21,13 @@ class AppDrawer extends StatelessWidget {
               );
             }
           ),
-          Divider();
+          Divider(),
           ListTile(
             leading: Icon(Icons.payment),
-            title: Text('Loja'),
+            title: Text('Pedidos'),
             onTap: () {
               Navigator.of(context).pushReplacementNamed(
-                AppRoutes.HOME,
+                AppRoutes.ORDERS,
               );
             }
           ),

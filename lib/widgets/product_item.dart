@@ -51,13 +51,11 @@ class ProductItem extends StatelessWidget {
             textAlign: TextAlign.center,
           ),
           trailing: IconButton(
-            icon: IconButton(
-              icon: Icon(Icons.shopping_cart),
+            icon: Icon(Icons.shopping_cart),
               color: Theme.of(context).accentColor,
               onPressed: () {
                 cart.addItem(product);
               },
-            ),
           ),
         ),
       ),
