@@ -9,7 +9,7 @@ class Order {
   final List<CartItem> products;
   final DateTime date;
 
-  Order(this.id, this.amount, this.products, this.date);
+  Order({this.id, this.amount, this.products, this.date});
 }
 
 class Orders with ChangeNotifier {
@@ -19,14 +19,14 @@ class Orders with ChangeNotifier {
     return [..._orders];
   }
 
-  void addOrder(List<CartItem> products, double total) {
+  void addOrder(Cart cart) {
     _orders.insert(
       0,
       Order(
         id: Random().nextDouble().toString(),
-        total: total,
+        amount: cart.totalAmount,
         date: DateTime.now(),
-        products: products,
+        products: cart.items.values.toList(),
       ),
     );
 

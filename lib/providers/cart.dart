@@ -23,7 +23,7 @@ class Cart with ChangeNotifier {
   Map<String, CartItem> _items = {};
 
   Map<String, CartItem> get items {
-    return { ..._items };
+    return {..._items};
   }
 
   int get itemsCount {
@@ -41,15 +41,16 @@ class Cart with ChangeNotifier {
 
   void addItem(Product product) {
     if (_items.containsKey(product.id)) {
-      _items.update(product.id, (existingItem) {
-        return CartItem(
+      _items.update(
+        product.id,
+        (existingItem) => CartItem(
           id: existingItem.id,
           productId: product.id,
           title: existingItem.title,
           quantity: existingItem.quantity + 1,
           price: existingItem.price,
-        );
-      });
+        ),
+      );
     } else {
       _items.putIfAbsent(
         product.id,
