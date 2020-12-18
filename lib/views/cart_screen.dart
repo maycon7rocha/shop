@@ -12,7 +12,7 @@ class CartScreen extends StatelessWidget {
 
     return Scaffold(
       appBar: AppBar(
-        title: Text('Carrinho'),
+        title: Text('Carrinho de compras'),
       ),
       body: Column(
         children: <Widget>[
@@ -24,7 +24,7 @@ class CartScreen extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: <Widget>[
                   Text(
-                    'Total',
+                    'Total:',
                     style: TextStyle(fontSize: 20),
                   ),
                   SizedBox(

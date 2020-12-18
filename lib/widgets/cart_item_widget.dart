@@ -61,14 +61,18 @@ class CartItemWidget extends StatelessWidget {
         child: Padding(
           padding: EdgeInsets.all(8),
           child: ListTile(
-            leading: CircleAvatar(
-              child: Padding(
-                padding: EdgeInsets.all(5),
-                child: Text('${cartItem.price}'),
+            leading: Chip(
+              label: Text(
+                'R\$ ${cartItem.price.toStringAsFixed(2)}',
+                style: TextStyle(
+                  color: Theme.of(context).primaryTextTheme.headline6.color,
+                ),
               ),
+              backgroundColor: Theme.of(context).primaryColor,
             ),
             title: Text(cartItem.title),
-            subtitle: Text('Total: R\$ ${cartItem.price * cartItem.quantity}'),
+            subtitle: Text(
+                'Total: R\$ ${(cartItem.price * cartItem.quantity).toStringAsFixed(2)}'),
             trailing: Text('${cartItem.quantity}x'),
           ),
         ),
