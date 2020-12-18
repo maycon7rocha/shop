@@ -1,6 +1,6 @@
-import 'dart:math';
-
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:shop/providers/products.dart';
 import '../providers/product.dart';
 
 class ProductFormScreen extends StatefulWidget {
@@ -57,17 +57,16 @@ class _ProductFormScreenState extends State<ProductFormScreen> {
     _form.currentState.save();
 
     final newProduct = Product(
-      id: Random().nextDouble().toString(),
       title: _formDate['title'],
       price: _formDate['price'],
       description: _formDate['description'],
       imageUrl: _formDate['imageUrl'],
     );
 
-    print(newProduct.id);
-    print(newProduct.title);
-    print(newProduct.price);
-    print(newProduct.imageUrl);
+    Provider.of<Products>(context, listen: false).addProduct(newProduct);
+
+    Navigator.of(context).pop();
+
   }
 
   @override
