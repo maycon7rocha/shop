@@ -22,6 +22,22 @@ class _ProductFormScreenState extends State<ProductFormScreen> {
     _imageUrlFocusNode.addListener(_updateImage);
   }
 
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+
+    if (_formDate.isEmpty) {
+      final product = ModalRoute.of(context).settings.arguments as Product;
+      _formDate['id'] = product.id;
+      _formDate['title'] = product.title;
+      _formDate['price'] = product.price;
+      _formDate['description'] = product.description;
+      _formDate['imageUrl'] = product.imageUrl;
+
+      _imageUrlController.text = _formDate['imageUrl'];
+    }
+  }
+
   void _updateImage() {
     if (isValidImageUrl(_imageUrlController.text)) {
       setState(() {});
@@ -56,17 +72,22 @@ class _ProductFormScreenState extends State<ProductFormScreen> {
     }
     _form.currentState.save();
 
-    final newProduct = Product(
+    final product = Product(
+      id: _formDate['id'],
       title: _formDate['title'],
       price: _formDate['price'],
       description: _formDate['description'],
       imageUrl: _formDate['imageUrl'],
     );
 
-    Provider.of<Products>(context, listen: false).addProduct(newProduct);
+    final products = Provider.of<Products>(context, listen: false);
+    if (_formDate['id'] == null) {
+      products.addProduct(product);
+    } else {
+      products.updateProduct(product);
+    }
 
     Navigator.of(context).pop();
-
   }
 
   @override
@@ -90,6 +111,7 @@ class _ProductFormScreenState extends State<ProductFormScreen> {
           child: ListView(
             children: [
               TextFormField(
+                initialValue: _formDate['title'],
                 decoration: InputDecoration(labelText: 'Título'),
                 textInputAction: TextInputAction.next,
                 onFieldSubmitted: (_) {
@@ -109,6 +131,7 @@ class _ProductFormScreenState extends State<ProductFormScreen> {
                 },
               ),
               TextFormField(
+                initialValue: _formDate['price'].toString(),
                 decoration: InputDecoration(labelText: 'Preço'),
                 textInputAction: TextInputAction.next,
                 focusNode: _priceFocusNode,
@@ -124,7 +147,7 @@ class _ProductFormScreenState extends State<ProductFormScreen> {
                   var newPrice = double.tryParse(value);
                   bool isInvalid = newPrice == null || newPrice <= 0;
 
-                  if(isEmpty || isInvalid) {
+                  if (isEmpty || isInvalid) {
                     return 'Informe um preço válido!';
                   }
 
@@ -132,6 +155,7 @@ class _ProductFormScreenState extends State<ProductFormScreen> {
                 },
               ),
               TextFormField(
+                initialValue: _formDate['description'],
                 decoration: InputDecoration(labelText: 'Descrição'),
                 maxLines: 3,
                 keyboardType: TextInputType.multiline,
@@ -166,7 +190,7 @@ class _ProductFormScreenState extends State<ProductFormScreen> {
                       validator: (value) {
                         bool emptyUrl = value.trim().isEmpty;
                         bool invalidUrl = !isValidImageUrl(value);
-                        if(emptyUrl || invalidUrl) {
+                        if (emptyUrl || invalidUrl) {
                           return 'Informe uma URL valida!';
                         }
 
