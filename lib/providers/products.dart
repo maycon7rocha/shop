@@ -19,11 +19,11 @@ class Products with ChangeNotifier {
     return _items.where((prod) => prod.isFavorite).toList();
   }
 
-  void addProduct(Product newProduct) {
+  Future<void> addProduct(Product newProduct) {
     // Rest API
-    const url = 'https://flutter-cod3r-47af7-default-rtdb.firebaseio.com/products.json';
+    const url = 'https://flutter-cod3r-47af7-default-rtdb.firebaseio.com/products';
     
-    http.post(
+    return http.post(
       url,
       body: json.encode({
         'title': newProduct.title,
