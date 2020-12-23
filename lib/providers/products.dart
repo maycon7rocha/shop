@@ -1,8 +1,10 @@
-import 'dart:math';
+import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:shop/data/dummy_data.dart';
 import 'package:shop/providers/product.dart';
+
+import 'package:http/http.dart' as http;
 
 class Products with ChangeNotifier {
   List<Product> _items = DUMMY_PRODUCTS;
@@ -18,14 +20,29 @@ class Products with ChangeNotifier {
   }
 
   void addProduct(Product newProduct) {
-    _items.add(Product(
-      id: Random().nextDouble().toString(),
-      title: newProduct.title,
-      price: newProduct.price,
-      description: newProduct.description,
-      imageUrl: newProduct.imageUrl,
-    ));
-    notifyListeners();
+    // Rest API
+    const url = 'https://flutter-cod3r-47af7-default-rtdb.firebaseio.com/products.json';
+    
+    http.post(
+      url,
+      body: json.encode({
+        'title': newProduct.title,
+        'price': newProduct.price,
+        'description': newProduct.description,
+        'imageUrl': newProduct.imageUrl,
+        'isFavorite': newProduct.isFavorite,
+      }),
+    ).then((response) {
+      _items.add(Product(
+        id: json.decode(response.body)['name'],
+        title: newProduct.title,
+        price: newProduct.price,
+        description: newProduct.description,
+        imageUrl: newProduct.imageUrl,
+      ));
+      notifyListeners();
+    });
+
   }
 
   void updateProduct(Product product) {
