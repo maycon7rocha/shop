@@ -1,13 +1,15 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
-import 'package:shop/data/dummy_data.dart';
 import 'package:shop/providers/product.dart';
 
 import 'package:http/http.dart' as http;
 
 class Products with ChangeNotifier {
-  List<Product> _items = DUMMY_PRODUCTS;
+  final String _url =
+      'https://flutter-cod3r-47af7-default-rtdb.firebaseio.com/products.json';
+
+  List<Product> _items = [];
 
   List<Product> get items => [..._items];
 
@@ -19,12 +21,27 @@ class Products with ChangeNotifier {
     return _items.where((prod) => prod.isFavorite).toList();
   }
 
+  Future<void> loadProducts() async {
+    final response = await http.get(_url);
+    Map<String, dynamic> data = json.decode(response.body);
+    data.forEach((productId, productData) {
+      _items.add(Product(
+        id: productId,
+        title: productData['title'],
+        price: productData['price'],
+        description: productData['description'],
+        imageUrl: productData['imageUrl'],
+        isFavorite: productData['isFavorite'],
+      ));
+    });
+    notifyListeners();
+    return Future.value();
+  }
+
   Future<void> addProduct(Product newProduct) async {
     // Rest API
-    const url = 'https://flutter-cod3r-47af7-default-rtdb.firebaseio.com/products.json';
-    
     final response = await http.post(
-      url,
+      _url,
       body: json.encode({
         'title': newProduct.title,
         'price': newProduct.price,
@@ -42,7 +59,6 @@ class Products with ChangeNotifier {
       imageUrl: newProduct.imageUrl,
     ));
     notifyListeners();
-
   }
 
   void updateProduct(Product product) {
