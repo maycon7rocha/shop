@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
+import 'package:shop/exceptions/http_exception.dart';
 import 'package:shop/providers/product.dart';
 
 import 'package:http/http.dart' as http;
@@ -94,11 +95,12 @@ class Products with ChangeNotifier {
       _items.remove(product);
       notifyListeners();
 
-      final response = await http.delete("$_baseUrl/${product.id}.json2");
+      final response = await http.delete("$_baseUrl/${product.id}.json");
 
       if (response.statusCode >= 400) {
         _items.insert(index, product);
         notifyListeners();
+        throw HttpException('Ocorreu um erro na exclusão do produto!');
       }
     }
   }
