@@ -1,11 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:shop/views/orders_screen.dart';
 import 'package:shop/views/products_overview_screen.dart';
-import './main_drawer.dart';
-
+import 'package:shop/views/products_screen.dart';
 
 class TabsScreen extends StatefulWidget {
-
   @override
   _TabsScreenState createState() => _TabsScreenState();
 }
@@ -27,6 +25,10 @@ class _TabsScreenState extends State<TabsScreen> {
         'title': 'Meus Pedidos',
         'screen': OrdersScreen(),
       },
+      {
+        'title': 'Gerenciar Produtos',
+        'screen': ProductsScreen(),
+      },
     ];
   }
 
@@ -38,29 +40,26 @@ class _TabsScreenState extends State<TabsScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      
-      drawer: Drawer(
-        child: MainDrawer(),
-      ),
-      body: _screens[_selectedScreenIndex]['screen'],
-      bottomNavigationBar: BottomNavigationBar(
-        onTap: _selectScreen,
-        backgroundColor: Theme.of(context).primaryColor,
-        unselectedItemColor: Colors.white,
-        selectedItemColor: Theme.of(context).accentColor,
-        currentIndex: _selectedScreenIndex,
-        items: [
-          BottomNavigationBarItem(
-            icon: Icon(Icons.shop),
-            label: 'Loja',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.shopping_cart),
-            label: 'Meus Pedidos',
-          )
-        ],
-      ),
+    return BottomNavigationBar(
+      backgroundColor: Theme.of(context).primaryColor,
+      unselectedItemColor: Colors.white,
+      selectedItemColor: Theme.of(context).accentColor,
+      currentIndex: _selectedScreenIndex,
+      onTap: _selectScreen,
+      items: [
+        BottomNavigationBarItem(
+          icon: Icon(Icons.shop),
+          label: 'Loja',
+        ),
+        BottomNavigationBarItem(
+          icon: Icon(Icons.shopping_cart),
+          label: 'Meus Pedidos',
+        ),
+        BottomNavigationBarItem(
+          icon: Icon(Icons.category),
+          label: 'Gerenciar Produtos',
+        ),
+      ],
     );
   }
 }

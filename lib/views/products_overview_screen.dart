@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:shop/providers/products.dart';
+import 'package:shop/views/tabs_screen.dart';
 import '../widgets/product_grid.dart';
 import '../widgets/badge.dart';
 import '../widgets/app_drawer.dart';
@@ -82,10 +83,12 @@ class _ProductOverviewScreenState extends State<ProductOverviewScreen> {
               child: CircularProgressIndicator(),
             )
           : RefreshIndicator(
-            onRefresh: () => _refreshProducts(context),
+              onRefresh: () => _refreshProducts(context),
               child: ProductGrid(_showFavoriteOnly),
             ),
       drawer: AppDrawer(),
+      bottomNavigationBar: TabsScreen(),
+
     );
   }
 }

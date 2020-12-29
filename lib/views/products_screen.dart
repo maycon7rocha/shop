@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:shop/views/tabs_screen.dart';
+import 'package:shop/widgets/app_drawer.dart';
 
 import '../providers/products.dart';
 import '../widgets/product_item.dart';
 import '../utils/app_routes.dart';
-import './main_drawer.dart';
 
 class ProductsScreen extends StatelessWidget {
 
@@ -30,9 +31,7 @@ class ProductsScreen extends StatelessWidget {
           ),
         ],
       ),
-      drawer: Drawer(
-        child: MainDrawer(),
-      ),
+      drawer: AppDrawer(),
       body: RefreshIndicator(
         onRefresh: () => _refreshProducts(context),
         child: Padding(
@@ -48,6 +47,7 @@ class ProductsScreen extends StatelessWidget {
           ),
         ),
       ),
+      bottomNavigationBar: TabsScreen(),
     );
   }
 }
