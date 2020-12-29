@@ -5,11 +5,10 @@ class Badge extends StatelessWidget {
   final String value;
   final Color color;
 
-  const Badge({
-    Key key,
-    this.value,
+  Badge({
+    @required this.child,
+    @required this.value,
     this.color,
-    this.child,
   });
 
   @override
@@ -39,7 +38,7 @@ class Badge extends StatelessWidget {
               ),
             ),
           ),
-        ),
+        )
       ],
     );
   }

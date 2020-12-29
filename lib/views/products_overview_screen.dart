@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:shop/providers/cart.dart';
 import 'package:shop/providers/products.dart';
-import 'package:shop/utils/app_routes.dart';
-import 'package:shop/widgets/app_drawer.dart';
-import 'package:shop/widgets/product_grid.dart';
-import 'package:shop/widgets/badge.dart';
+import '../widgets/product_grid.dart';
+import '../widgets/badge.dart';
+import '../widgets/app_drawer.dart';
+import '../providers/cart.dart';
+import '../utils/app_routes.dart';
 
 enum FilterOptions {
   Favorite,
@@ -21,10 +21,13 @@ class _ProductOverviewScreenState extends State<ProductOverviewScreen> {
   bool _showFavoriteOnly = false;
   bool _isLoading = true;
 
+  Future<void> _refreshProducts(BuildContext context) {
+    return Provider.of<Products>(context, listen: false).loadProducts();
+  }
+
   @override
   void initState() {
     super.initState();
-    // carrega os produtos
     Provider.of<Products>(context, listen: false).loadProducts().then((_) {
       setState(() {
         _isLoading = false;
@@ -48,6 +51,7 @@ class _ProductOverviewScreenState extends State<ProductOverviewScreen> {
                 }
               });
             },
+            icon: Icon(Icons.more_vert),
             itemBuilder: (_) => [
               PopupMenuItem(
                 child: Text('Somente Favoritos'),
@@ -63,21 +67,24 @@ class _ProductOverviewScreenState extends State<ProductOverviewScreen> {
             child: IconButton(
               icon: Icon(Icons.shopping_cart),
               onPressed: () {
-                Navigator.of(context).pushNamed(
-                  AppRoutes.CART,
-                );
+                Navigator.of(context).pushNamed(AppRoutes.CART);
               },
             ),
             builder: (_, cart, child) => Badge(
               value: cart.itemsCount.toString(),
               child: child,
             ),
-          ),
+          )
         ],
       ),
       body: _isLoading
-          ? Center(child: CircularProgressIndicator())
-          : ProductGrid(_showFavoriteOnly),
+          ? Center(
+              child: CircularProgressIndicator(),
+            )
+          : RefreshIndicator(
+            onRefresh: () => _refreshProducts(context),
+              child: ProductGrid(_showFavoriteOnly),
+            ),
       drawer: AppDrawer(),
     );
   }

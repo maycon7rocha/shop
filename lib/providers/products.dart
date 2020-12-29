@@ -1,15 +1,13 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
-import 'package:shop/exceptions/http_exception.dart';
-import 'package:shop/providers/product.dart';
-
 import 'package:http/http.dart' as http;
+import 'package:shop/exceptions/http_exception.dart';
+import 'package:shop/utils/constants.dart';
+import './product.dart';
 
 class Products with ChangeNotifier {
-  final String _baseUrl =
-      'https://flutter-cod3r-47af7-default-rtdb.firebaseio.com/products';
-
+  final String _baseUrl = '${Constants.BASE_API_URL}/products';
   List<Product> _items = [];
 
   List<Product> get items => [..._items];
@@ -27,14 +25,13 @@ class Products with ChangeNotifier {
     Map<String, dynamic> data = json.decode(response.body);
 
     _items.clear();
-
     if (data != null) {
       data.forEach((productId, productData) {
         _items.add(Product(
           id: productId,
           title: productData['title'],
-          price: productData['price'],
           description: productData['description'],
+          price: productData['price'],
           imageUrl: productData['imageUrl'],
           isFavorite: productData['isFavorite'],
         ));
@@ -45,13 +42,12 @@ class Products with ChangeNotifier {
   }
 
   Future<void> addProduct(Product newProduct) async {
-    // Rest API
     final response = await http.post(
       "$_baseUrl.json",
       body: json.encode({
         'title': newProduct.title,
-        'price': newProduct.price,
         'description': newProduct.description,
+        'price': newProduct.price,
         'imageUrl': newProduct.imageUrl,
         'isFavorite': newProduct.isFavorite,
       }),
@@ -60,8 +56,8 @@ class Products with ChangeNotifier {
     _items.add(Product(
       id: json.decode(response.body)['name'],
       title: newProduct.title,
-      price: newProduct.price,
       description: newProduct.description,
+      price: newProduct.price,
       imageUrl: newProduct.imageUrl,
     ));
     notifyListeners();
@@ -78,8 +74,8 @@ class Products with ChangeNotifier {
         "$_baseUrl/${product.id}.json",
         body: json.encode({
           'title': product.title,
-          'price': product.price,
           'description': product.description,
+          'price': product.price,
           'imageUrl': product.imageUrl,
         }),
       );
@@ -100,8 +96,20 @@ class Products with ChangeNotifier {
       if (response.statusCode >= 400) {
         _items.insert(index, product);
         notifyListeners();
-        throw HttpException('Ocorreu um erro na exclusão do produto!');
-      }
+        throw HttpException('Ocorreu um erro na exclusão do produto.');
+      } 
     }
   }
 }
+
+// bool _showFavoriteOnly = false;
+
+// void showFavoriteOnly() {
+//   _showFavoriteOnly = true;
+//   notifyListeners();
+
+// }
+// void showAll() {
+//   _showFavoriteOnly = false;
+//   notifyListeners();
+// }

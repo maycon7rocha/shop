@@ -1,11 +1,13 @@
+
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import 'package:shop/providers/orders.dart';
+
+import '../providers/orders.dart';
 
 class OrderWidget extends StatefulWidget {
   final Order order;
 
-  const OrderWidget(this.order);
+  OrderWidget(this.order);
 
   @override
   _OrderWidgetState createState() => _OrderWidgetState();
@@ -19,9 +21,9 @@ class _OrderWidgetState extends State<OrderWidget> {
     return Card(
       margin: EdgeInsets.all(10),
       child: Column(
-        children: [
+        children: <Widget>[
           ListTile(
-            title: Text('R\$ ${widget.order.amount.toStringAsFixed(2)}'),
+            title: Text('R\$ ${widget.order.total.toStringAsFixed(2)}'),
             subtitle: Text(
               DateFormat('dd/MM/yyyy hh:mm').format(widget.order.date),
             ),
@@ -40,12 +42,12 @@ class _OrderWidgetState extends State<OrderWidget> {
                 horizontal: 15,
                 vertical: 4,
               ),
-              height: widget.order.products.length * 30.0,
+              height: (widget.order.products.length * 25.0) + 10,
               child: ListView(
                 children: widget.order.products.map((product) {
                   return Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
+                    children: <Widget>[
                       Text(
                         product.title,
                         style: TextStyle(
@@ -57,14 +59,14 @@ class _OrderWidgetState extends State<OrderWidget> {
                         '${product.quantity} x R\$ ${product.price}',
                         style: TextStyle(
                           fontSize: 18,
-                          fontWeight: FontWeight.bold,
+                          color: Colors.grey,
                         ),
                       ),
                     ],
                   );
                 }).toList(),
               ),
-            )
+            ),
         ],
       ),
     );

@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
-import '../utils/app_routes.dart';
-
 import 'package:provider/provider.dart';
-import 'package:shop/providers/cart.dart';
-import 'package:shop/providers/product.dart';
+import '../providers/product.dart';
+import '../providers/cart.dart';
+import '../utils/app_routes.dart';
 
 class ProductGridItem extends StatelessWidget {
   @override
@@ -20,14 +19,6 @@ class ProductGridItem extends StatelessWidget {
               AppRoutes.PRODUCT_DETAIL,
               arguments: product,
             );
-
-            /* 
-            Navigator.of(context).push(
-              MaterialPageRoute(
-                builder: (ctx) => ProductDetailScreen(product),
-              ),
-            );
-             */
           },
           child: Image.network(
             product.imageUrl,
@@ -59,7 +50,6 @@ class ProductGridItem extends StatelessWidget {
                 SnackBar(
                   content: Text(
                     'Produto adicionado com sucesso!',
-                    textAlign: TextAlign.center,
                   ),
                   duration: Duration(seconds: 2),
                   action: SnackBarAction(

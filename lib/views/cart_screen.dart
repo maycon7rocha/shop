@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:shop/providers/cart.dart';
-import 'package:shop/providers/orders.dart';
-import 'package:shop/widgets/cart_item_widget.dart';
+
+import '../widgets/cart_item_widget.dart';
+import '../providers/cart.dart';
+import '../providers/orders.dart';
 
 class CartScreen extends StatelessWidget {
   @override
@@ -12,7 +13,7 @@ class CartScreen extends StatelessWidget {
 
     return Scaffold(
       appBar: AppBar(
-        title: Text('Carrinho de compras'),
+        title: Text('Carrinho'),
       ),
       body: Column(
         children: <Widget>[
@@ -24,15 +25,13 @@ class CartScreen extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: <Widget>[
                   Text(
-                    'Total:',
+                    'Total',
                     style: TextStyle(fontSize: 20),
                   ),
-                  SizedBox(
-                    width: 10,
-                  ),
+                  SizedBox(width: 10),
                   Chip(
                     label: Text(
-                      'R\$ ${cart.totalAmount.toStringAsFixed(2)}',
+                      'R\$${cart.totalAmount}',
                       style: TextStyle(
                         color: Theme.of(context).primaryTextTheme.headline6.color,
                       ),
@@ -40,22 +39,18 @@ class CartScreen extends StatelessWidget {
                     backgroundColor: Theme.of(context).primaryColor,
                   ),
                   Spacer(),
-                  OrderButton(cart: cart)
+                  OrderButton(cart: cart),
                 ],
               ),
             ),
           ),
-          SizedBox(
-            height: 10,
-          ),
+          SizedBox(height: 10),
           Expanded(
             child: ListView.builder(
               itemCount: cart.itemsCount,
-              itemBuilder: (ctx, i) => CartItemWidget(
-                cartItems[i],
-              ),
+              itemBuilder: (ctx, i) => CartItemWidget(cartItems[i]),
             ),
-          )
+          ),
         ],
       ),
     );
@@ -86,10 +81,10 @@ class _OrderButtonState extends State<OrderButton> {
         setState(() {
           _isLoading = true;
         });
-
+        
         await Provider.of<Orders>(context, listen: false)
             .addOrder(widget.cart);
-
+        
         setState(() {
           _isLoading = false;
         });

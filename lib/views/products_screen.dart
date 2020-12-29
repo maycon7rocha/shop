@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:shop/providers/products.dart';
-import 'package:shop/utils/app_routes.dart';
-import 'package:shop/widgets/app_drawer.dart';
-import 'package:shop/widgets/product_item.dart';
 
-class ProductScreen extends StatelessWidget {
+import '../providers/products.dart';
+import '../widgets/product_item.dart';
+import '../utils/app_routes.dart';
+import './main_drawer.dart';
+
+class ProductsScreen extends StatelessWidget {
 
   Future<void> _refreshProducts(BuildContext context) {
     return Provider.of<Products>(context, listen: false).loadProducts();
@@ -15,13 +16,12 @@ class ProductScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     final productsData = Provider.of<Products>(context);
     final products = productsData.items;
-
     return Scaffold(
       appBar: AppBar(
         title: Text('Gerenciar Produtos'),
         actions: <Widget>[
           IconButton(
-            icon: Icon(Icons.add),
+            icon: const Icon(Icons.add),
             onPressed: () {
               Navigator.of(context).pushNamed(
                 AppRoutes.PRODUCT_FORM,
@@ -30,6 +30,9 @@ class ProductScreen extends StatelessWidget {
           ),
         ],
       ),
+      drawer: Drawer(
+        child: MainDrawer(),
+      ),
       body: RefreshIndicator(
         onRefresh: () => _refreshProducts(context),
         child: Padding(
@@ -37,7 +40,7 @@ class ProductScreen extends StatelessWidget {
           child: ListView.builder(
             itemCount: productsData.itemsCount,
             itemBuilder: (ctx, i) => Column(
-              children: [
+              children: <Widget>[
                 ProductItem(products[i]),
                 Divider(),
               ],
@@ -45,7 +48,6 @@ class ProductScreen extends StatelessWidget {
           ),
         ),
       ),
-      drawer: AppDrawer(),
     );
   }
 }
