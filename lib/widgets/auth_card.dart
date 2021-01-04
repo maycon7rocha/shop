@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import '../providers/auth.dart';
 
 enum AuthMode { Signup, Login }
 
@@ -20,7 +22,7 @@ class _AuthCardState extends State<AuthCard> {
     'password': '',
   };
 
-  void _submit() {
+  Future<void> _submit() async {
     // nao faz nada, caso nao esteja validado
     if (!_form.currentState.validate()) {
       return;
@@ -30,10 +32,22 @@ class _AuthCardState extends State<AuthCard> {
       _isLoading = true;
     });
 
+    _form.currentState.save();
+
+    final auth = Provider.of<Auth>(context, listen: false);
+
     if (_authMode == AuthMode.Login) {
       // logn
+      await auth.login(
+        _authData['email'],
+        _authData['password'],
+      );
     } else {
       // registrar
+      await auth.signup(
+        _authData['email'],
+        _authData['password'],
+      );
     }
 
     setState(() {
@@ -87,7 +101,7 @@ class _AuthCardState extends State<AuthCard> {
                   controller: _passwordController,
                   obscureText: true,
                   validator: (value) {
-                    if (value.isEmpty || value.length < 5) {
+                    if (value.isEmpty || value.length < 6) {
                       return "Informe uma senha válida!";
                     }
                     return null;
@@ -107,7 +121,7 @@ class _AuthCardState extends State<AuthCard> {
                           }
                         : null,
                   ),
-                  Spacer(),
+                Spacer(),
                 if (_isLoading)
                   CircularProgressIndicator()
                 else
