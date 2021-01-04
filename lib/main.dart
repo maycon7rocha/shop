@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import './utils/app_routes.dart';
 
 import 'package:shop/views/auth_home_screen.dart';
-import 'package:shop/views/products_overview_screen.dart';
 import './views/product_detail_screen.dart';
 import './views/cart_screen.dart';
 import './views/orders_screen.dart';
@@ -27,9 +26,10 @@ class MyApp extends StatelessWidget {
           create: (_) => new Auth(),
         ),
         ChangeNotifierProxyProvider<Auth, Products>(
-          create: (_) => new Products(null, []),
+          create: (_) => new Products(),
           update: (ctx, auth, previousProducts) => new Products(
             auth.token,
+            auth.userId,
             previousProducts.items,
           ),
         ),
@@ -37,9 +37,10 @@ class MyApp extends StatelessWidget {
           create: (_) => new Cart(),
         ),
         ChangeNotifierProxyProvider<Auth, Orders>(
-          create: (_) => new Orders(null, []),
+          create: (_) => new Orders(),
           update: (ctx, auth, previousOrders) => new Orders(
             auth.token,
+            auth.userId,
             previousOrders.items,
           ),
         ),

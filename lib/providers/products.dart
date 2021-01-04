@@ -11,8 +11,9 @@ class Products with ChangeNotifier {
   List<Product> _items = [];
 
   String _token;
+  String _userId;
 
-  Products(this._token, this._items);
+  Products([this._token, this._userId, this._items = const [] ]);
 
   List<Product> get items => [..._items];
 
@@ -28,16 +29,20 @@ class Products with ChangeNotifier {
     final response = await http.get("$_baseUrl.json?auth=$_token");
     Map<String, dynamic> data = json.decode(response.body);
 
+    final favResponse = await http.get("${Constants.BASE_API_URL}/userFavorites/$_userId.json?auth=$_token");
+    final favMap = json.decode(favResponse.body);
+
     _items.clear();
     if (data != null) {
       data.forEach((productId, productData) {
+        final isFavorite = favMap == null ? false : favMap[productId] ?? false;
         _items.add(Product(
           id: productId,
           title: productData['title'],
           description: productData['description'],
           price: productData['price'],
           imageUrl: productData['imageUrl'],
-          isFavorite: productData['isFavorite'],
+          isFavorite: isFavorite,
         ));
       });
       notifyListeners();
@@ -53,7 +58,6 @@ class Products with ChangeNotifier {
         'description': newProduct.description,
         'price': newProduct.price,
         'imageUrl': newProduct.imageUrl,
-        'isFavorite': newProduct.isFavorite,
       }),
     );
 
@@ -105,15 +109,3 @@ class Products with ChangeNotifier {
     }
   }
 }
-
-// bool _showFavoriteOnly = false;
-
-// void showFavoriteOnly() {
-//   _showFavoriteOnly = true;
-//   notifyListeners();
-
-// }
-// void showAll() {
-//   _showFavoriteOnly = false;
-//   notifyListeners();
-// }
