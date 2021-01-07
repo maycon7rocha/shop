@@ -61,6 +61,21 @@ class Cart with ChangeNotifier {
           price: existingItem.price,
         ),
       );
+
+      final cartResponse = await http.get(url);
+      final data = json.decode(cartResponse.body);
+      if (data != null) {
+        data.forEach((cartId, cartData) {
+          if(cartData['productId'] == product.id){
+             http.patch(
+              "$_baseUrl/$_userId/$cartId.json?auth=$_token",
+              body: json.encode({
+                'quantity': cartData['quantity'] + 1,
+              }),
+          );
+          }
+        });
+      }
     } else {
       _items.putIfAbsent(
         product.id,
@@ -73,23 +88,23 @@ class Cart with ChangeNotifier {
         ),
       );
 
+      await http.post(
+        url,
+        body: json.encode({
+          'id': Random().nextDouble().toString(),
+          'productId': product.id,
+          'title': product.title,
+          'quantity': 1,
+          'price': product.price,
+        }),
+      );
     }
 
     notifyListeners();
     print(_items.values);
-    
-    final response = await http.post(
-      url,
-      body: json.encode({
-        'id': Random().nextDouble().toString(),
-        'productId': product.id,
-        'title': product.title,
-        'quantity': 1,
-        'price': product.price,
-      }),
-    );
 
     // print(response.body);
+    return Future.value();
   }
 
   void removeSingleItem(productId) {
