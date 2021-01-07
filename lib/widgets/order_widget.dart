@@ -56,7 +56,7 @@ class _OrderWidgetState extends State<OrderWidget> {
                         ),
                       ),
                       Text(
-                        '${product.quantity} x R\$ ${product.price}',
+                        '${product.quantity} x R\$ ${product.price.toStringAsFixed(2)}',
                         style: TextStyle(
                           fontSize: 18,
                           color: Colors.grey,

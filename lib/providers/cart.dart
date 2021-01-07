@@ -1,6 +1,9 @@
+import 'dart:convert';
 import 'dart:math';
 
+import 'package:http/http.dart' as http;
 import 'package:flutter/foundation.dart';
+import 'package:shop/utils/constants.dart';
 import './product.dart';
 
 class CartItem {
@@ -20,7 +23,13 @@ class CartItem {
 }
 
 class Cart with ChangeNotifier {
+  final String _baseUrl = '${Constants.BASE_API_URL}/cart';
   Map<String, CartItem> _items = {};
+
+  String _token;
+  String _userId;
+
+  Cart([this._token, this._userId, this._items = const {}]);
 
   Map<String, CartItem> get items {
     return {..._items};
@@ -38,7 +47,9 @@ class Cart with ChangeNotifier {
     return total;
   }
 
-  void addItem(Product product) {
+  Future<void> addItem(Product product) async {
+    final url = "$_baseUrl/$_userId.json?auth=$_token";
+
     if (_items.containsKey(product.id)) {
       _items.update(
         product.id,
@@ -61,17 +72,32 @@ class Cart with ChangeNotifier {
           quantity: 1,
         ),
       );
+
     }
 
     notifyListeners();
+    print(_items.values);
+    
+    final response = await http.post(
+      url,
+      body: json.encode({
+        'id': Random().nextDouble().toString(),
+        'productId': product.id,
+        'title': product.title,
+        'quantity': 1,
+        'price': product.price,
+      }),
+    );
+
+    // print(response.body);
   }
 
   void removeSingleItem(productId) {
-    if(!_items.containsKey(productId)) {
+    if (!_items.containsKey(productId)) {
       return;
     }
 
-    if(_items[productId].quantity == 1) {
+    if (_items[productId].quantity == 1) {
       _items.remove(productId);
     } else {
       _items.update(
