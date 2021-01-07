@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:shop/views/orders_screen.dart';
-import 'package:shop/views/products_overview_screen.dart';
-import 'package:shop/views/products_screen.dart';
+// import 'package:shop/views/orders_screen.dart';
+// import 'package:shop/views/products_overview_screen.dart';
+// import 'package:shop/views/products_screen.dart';
 
 class TabsScreen extends StatefulWidget {
   @override
@@ -11,9 +11,9 @@ class TabsScreen extends StatefulWidget {
 class _TabsScreenState extends State<TabsScreen> {
   int _selectedScreenIndex = 0;
 
-  List<Map<String, Object>> _screens;
+  // List<Map<String, Object>> _screens;
 
-  @override
+/*   @override
   void initState() {
     super.initState();
     _screens = [
@@ -30,7 +30,7 @@ class _TabsScreenState extends State<TabsScreen> {
         'screen': ProductsScreen(),
       },
     ];
-  }
+  } */
 
   _selectScreen(int index) {
     setState(() {
