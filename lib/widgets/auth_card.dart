@@ -147,101 +147,99 @@ class _AuthCardState extends State<AuthCard>
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(10.0),
       ),
-      child: SingleChildScrollView(
-        child: AnimatedContainer(
-          duration: Duration(milliseconds: 300),
-          curve: Curves.easeIn,
-          height: _authMode == AuthMode.Login ? 330 : 380,
-          // height: _heighAnimaton.value.height,
-          width: deviceSize.width * 0.75,
-          padding: EdgeInsets.all(16.0),
-          child: Form(
-            key: _form,
-            child: Column(
-              children: [
-                TextFormField(
-                  decoration: InputDecoration(labelText: 'E-mail'),
-                  keyboardType: TextInputType.emailAddress,
-                  validator: (value) {
-                    if (value.isEmpty || !value.contains('@')) {
-                      return "Informe um e-mail válido!";
-                    }
-                    return null;
-                  },
-                  onSaved: (value) => _authData['email'] = value,
+      child: AnimatedContainer(
+        duration: Duration(milliseconds: 300),
+        curve: Curves.easeIn,
+        height: _authMode == AuthMode.Login ? 330 : 380,
+        // height: _heighAnimaton.value.height,
+        width: deviceSize.width * 0.75,
+        padding: EdgeInsets.all(16.0),
+        child: Form(
+          key: _form,
+          child: Column(
+            children: [
+              TextFormField(
+                decoration: InputDecoration(labelText: 'E-mail'),
+                keyboardType: TextInputType.emailAddress,
+                validator: (value) {
+                  if (value.isEmpty || !value.contains('@')) {
+                    return "Informe um e-mail válido!";
+                  }
+                  return null;
+                },
+                onSaved: (value) => _authData['email'] = value,
+              ),
+              TextFormField(
+                decoration: InputDecoration(labelText: 'Senha'),
+                controller: _passwordController,
+                obscureText: true,
+                validator: (value) {
+                  if (value.isEmpty || value.length < 6) {
+                    return "Informe uma senha válida!";
+                  }
+                  return null;
+                },
+                onSaved: (value) => _authData['password'] = value,
+              ),
+              AnimatedContainer(
+                constraints: BoxConstraints(
+                  minHeight: _authMode == AuthMode.Signup ? 60 : 0,
+                  maxHeight: _authMode == AuthMode.Signup ? 120 : 0,
                 ),
-                TextFormField(
-                  decoration: InputDecoration(labelText: 'Senha'),
-                  controller: _passwordController,
-                  obscureText: true,
-                  validator: (value) {
-                    if (value.isEmpty || value.length < 6) {
-                      return "Informe uma senha válida!";
-                    }
-                    return null;
-                  },
-                  onSaved: (value) => _authData['password'] = value,
-                ),
-                AnimatedContainer(
-                  constraints: BoxConstraints(
-                    minHeight: _authMode == AuthMode.Signup ? 60 : 0,
-                    maxHeight: _authMode == AuthMode.Signup ? 120 : 0,
-                  ),
-                  duration: Duration(milliseconds: 300),
-                  curve: Curves.linear,
-                  child: FadeTransition(
-                    opacity: _opacityAnimaton,
-                    child: SlideTransition(
-                      position: _slideAnimaton,
-                      child: TextFormField(
-                        decoration:
-                            InputDecoration(labelText: 'Confirmar Senha'),
-                        obscureText: true,
-                        validator: _authMode == AuthMode.Signup
-                            ? (value) {
-                                if (value != _passwordController.text) {
-                                  return "Senhas são diferentes!";
-                                }
-                                return null;
+                duration: Duration(milliseconds: 300),
+                curve: Curves.linear,
+                child: FadeTransition(
+                  opacity: _opacityAnimaton,
+                  child: SlideTransition(
+                    position: _slideAnimaton,
+                    child: TextFormField(
+                      decoration:
+                          InputDecoration(labelText: 'Confirmar Senha'),
+                      obscureText: true,
+                      validator: _authMode == AuthMode.Signup
+                          ? (value) {
+                              if (value != _passwordController.text) {
+                                return "Senhas são diferentes!";
                               }
-                            : null,
-                      ),
+                              return null;
+                            }
+                          : null,
                     ),
                   ),
                 ),
-                Spacer(),
-                if (_isLoading)
-                  CircularProgressIndicator()
-                else
-                  RaisedButton(
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(30),
-                    ),
-                    color: Theme.of(context).primaryColor,
-                    textColor: Theme.of(context).primaryTextTheme.button.color,
-                    padding: EdgeInsets.symmetric(
-                      vertical: 8.0,
-                      horizontal: 30.0,
-                    ),
-                    child: Text(
-                      _authMode == AuthMode.Login ? 'ENTRAR' : 'REGISTRAR',
-                    ),
-                    onPressed: _submit,
+              ),
+              Spacer(),
+              if (_isLoading)
+                CircularProgressIndicator()
+              else
+                RaisedButton(
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(30),
                   ),
-                FlatButton(
-                  onPressed: _swithAuthMode,
+                  color: Theme.of(context).primaryColor,
+                  textColor: Theme.of(context).primaryTextTheme.button.color,
+                  padding: EdgeInsets.symmetric(
+                    vertical: 8.0,
+                    horizontal: 30.0,
+                  ),
                   child: Text(
-                    _authMode == AuthMode.Login
-                        ? 'ALTERAR PARA REGISTRAR'
-                        : 'ALTERAR PARA ENTRAR',
-                    style: TextStyle(
-                      fontSize: 12,
-                    ),
+                    _authMode == AuthMode.Login ? 'ENTRAR' : 'REGISTRAR',
                   ),
-                  textColor: Theme.of(context).primaryColor,
+                  onPressed: _submit,
                 ),
-              ],
-            ),
+              FlatButton(
+                onPressed: _swithAuthMode,
+                child: Text(
+                  _authMode == AuthMode.Login
+                      ? 'ALTERAR PARA REGISTRAR'
+                      : 'ALTERAR PARA ENTRAR',
+                  style: TextStyle(
+                    fontSize: 12,
+                  ),
+                ),
+                textColor: Theme.of(context).primaryColor,
+              ),
+            ],
           ),
         ),
       ),
