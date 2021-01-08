@@ -34,10 +34,7 @@ class _AuthCardState extends State<AuthCard>
         ));
 
     _heighAnimaton = Tween(
-      begin: Size(
-        double.infinity,
-        330,
-      ),
+      begin: Size(double.infinity, 330),
       end: Size(double.infinity, 380),
     ).animate(
       CurvedAnimation(
@@ -140,15 +137,13 @@ class _AuthCardState extends State<AuthCard>
         borderRadius: BorderRadius.circular(10.0),
       ),
       child: SingleChildScrollView(
-        child: AnimatedBuilder(
-          animation: _heighAnimaton,
-          builder: (ctx, ch) => Container(
-            // height: _authMode == AuthMode.Login ? 330 : 380,
-            height: _heighAnimaton.value.height,
-            width: deviceSize.width * 0.75,
-            padding: EdgeInsets.all(16.0),
-            child: ch,
-          ),
+        child: AnimatedContainer(
+          duration: Duration(milliseconds: 300),
+          curve: Curves.easeIn,
+          height: _authMode == AuthMode.Login ? 330 : 380,
+          // height: _heighAnimaton.value.height,
+          width: deviceSize.width * 0.75,
+          padding: EdgeInsets.all(16.0),
           child: Form(
             key: _form,
             child: Column(
