@@ -12,11 +12,47 @@ class AuthCard extends StatefulWidget {
   _AuthCardState createState() => _AuthCardState();
 }
 
-class _AuthCardState extends State<AuthCard> {
+class _AuthCardState extends State<AuthCard>
+    with SingleTickerProviderStateMixin {
   GlobalKey<FormState> _form = GlobalKey();
   bool _isLoading = false;
   AuthMode _authMode = AuthMode.Login;
   final _passwordController = TextEditingController();
+
+  // ANIMAÇÃO
+  AnimationController _controller;
+  Animation<Size> _heighAnimaton;
+
+  @override
+  void initState() {
+    super.initState();
+
+    _controller = AnimationController(
+        vsync: this,
+        duration: Duration(
+          milliseconds: 300,
+        ));
+
+    _heighAnimaton = Tween(
+      begin: Size(
+        double.infinity,
+        330,
+      ),
+      end: Size(double.infinity, 380),
+    ).animate(
+      CurvedAnimation(
+        parent: _controller,
+        curve: Curves.linear,
+      ),
+    );
+  }
+
+  // legal fazer isso para liberar recursos
+  @override
+  void dispose() {
+    super.dispose();
+    _controller.dispose();
+  }
 
   final Map<String, String> _authData = {
     'email': '',
@@ -85,10 +121,12 @@ class _AuthCardState extends State<AuthCard> {
       setState(() {
         _authMode = AuthMode.Signup;
       });
+      _controller.forward();
     } else {
       setState(() {
         _authMode = AuthMode.Login;
       });
+      _controller.reverse();
     }
   }
 
@@ -102,10 +140,15 @@ class _AuthCardState extends State<AuthCard> {
         borderRadius: BorderRadius.circular(10.0),
       ),
       child: SingleChildScrollView(
-        child: Container(
-          height: _authMode == AuthMode.Login ? 330 : 380,
-          width: deviceSize.width * 0.75,
-          padding: EdgeInsets.all(16.0),
+        child: AnimatedBuilder(
+          animation: _heighAnimaton,
+          builder: (ctx, ch) => Container(
+            // height: _authMode == AuthMode.Login ? 330 : 380,
+            height: _heighAnimaton.value.height,
+            width: deviceSize.width * 0.75,
+            padding: EdgeInsets.all(16.0),
+            child: ch,
+          ),
           child: Form(
             key: _form,
             child: Column(
@@ -168,7 +211,12 @@ class _AuthCardState extends State<AuthCard> {
                 FlatButton(
                   onPressed: _swithAuthMode,
                   child: Text(
-                    _authMode == AuthMode.Login ? 'REGISTRAR' : 'ENTRAR',
+                    _authMode == AuthMode.Login
+                        ? 'ALTERAR PARA REGISTRAR'
+                        : 'ALTERAR PARA ENTRAR',
+                    style: TextStyle(
+                      fontSize: 12,
+                    ),
                   ),
                   textColor: Theme.of(context).primaryColor,
                 ),

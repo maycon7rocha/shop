@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:convert';
 import 'dart:math';
 
@@ -47,6 +48,41 @@ class Cart with ChangeNotifier {
     return total;
   }
 
+  Future<void> loadCart() async {
+    // List<CartItem> loadedItems = [];
+    final response = await http.get("$_baseUrl/$_userId.json?auth=$_token");
+    Map<String, dynamic> _items = json.decode(response.body);
+    // print(data);
+    // print(data.length);
+
+    // if (data != null) {
+      // data.forEach((cartId, cardData) {
+        // _items.addAll(data);
+        // loadedItems.add(
+        //   CartItem(
+        //   id: cardData.id,
+        //   productId: cartId,
+        //   title: cardData.title,
+        //   quantity: cardData.quantity + 1,
+        //   price: cardData.price,
+        // )
+        // );
+        // _items.addAll(cardData);
+      // });
+      // print('tem dados'); 
+    // }
+    // _items.addAll(data);
+
+
+    // print('fora');
+    // print(loadedItems);
+    print(_items);
+
+    notifyListeners();
+    // _items = loadedItems;
+    return Future.value();
+  }
+
   Future<void> addItem(Product product) async {
     final url = "$_baseUrl/$_userId.json?auth=$_token";
 
@@ -66,13 +102,13 @@ class Cart with ChangeNotifier {
       final data = json.decode(cartResponse.body);
       if (data != null) {
         data.forEach((cartId, cartData) {
-          if(cartData['productId'] == product.id){
-             http.patch(
+          if (cartData['productId'] == product.id) {
+            http.patch(
               "$_baseUrl/$_userId/$cartId.json?auth=$_token",
               body: json.encode({
                 'quantity': cartData['quantity'] + 1,
               }),
-          );
+            );
           }
         });
       }
@@ -101,7 +137,6 @@ class Cart with ChangeNotifier {
     }
 
     notifyListeners();
-    print(_items.values);
 
     // print(response.body);
     return Future.value();
