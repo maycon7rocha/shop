@@ -17,14 +17,17 @@ class ProductDetailScreen extends StatelessWidget {
             Container(
               height: 300,
               width: double.infinity,
-              child: Image.network(
-                product.imageUrl,
-                fit: BoxFit.cover,
+              child: Hero(
+                tag: product.id,
+                child: Image.network(
+                  product.imageUrl,
+                  fit: BoxFit.cover,
+                ),
               ),
             ),
             SizedBox(height: 10),
             Text(
-              'R\$ ${product.price}',
+              'R\$ ${product.price.toStringAsFixed(2)}',
               style: TextStyle(
                 color: Colors.grey,
                 fontSize: 20,
